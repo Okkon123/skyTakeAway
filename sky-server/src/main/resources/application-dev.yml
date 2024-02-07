@@ -12,3 +12,7 @@ sky:
     access-key-id: LTAI5tP5EVUyk5gSUN661GaZ
     access-key-secret: pXORLn97nKJwF4GBf2t8O4DBXLfkbY
     bucket-name: web-skytakeaway
+  redis:
+    host: 47.76.161.56
+    port: 6379
+    password: 123456
