@@ -9,8 +9,8 @@ sky:
 
   alioss:
     endpoint: oss-cn-wuhan-lr.aliyuncs.com
-    access-key-id: LTAI5tP5EVUyk5gSUN661GaZ
-    access-key-secret: pXORLn97nKJwF4GBf2t8O4DBXLfkbY
+    access-key-id: 111
+    access-key-secret: 111
     bucket-name: web-skytakeaway
   redis:
     host: 47.76.161.56
