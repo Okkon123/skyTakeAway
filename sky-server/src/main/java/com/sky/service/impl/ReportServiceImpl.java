@@ -2,8 +2,10 @@ package com.sky.service.impl;
 
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.Map;
 public class ReportServiceImpl implements ReportService {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public TurnoverReportVO getTurnover(LocalDate begin, LocalDate end) {
         List<LocalDate> dateList = new ArrayList<>();
@@ -43,5 +47,37 @@ public class ReportServiceImpl implements ReportService {
                 .dateList(StringUtil.join(",", dateList))
                 .turnoverList(StringUtil.join(",", turnoverList))
                 .build();
+    }
+
+    @Override
+    public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(begin);
+        while(!begin.equals(end)) {
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+        List<Integer> newUserList = new ArrayList<>();
+        List<Integer> totalUserList = new ArrayList<>();
+        for (LocalDate date : dateList) {
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+            Integer newUser = getUserCount(beginTime, endTime);
+            Integer totalUser = getUserCount(null, endTime);
+            newUserList.add(newUser);
+            totalUserList.add(totalUser);
+        }
+        return UserReportVO.builder()
+                .dateList(StringUtil.join(",", dateList))
+                .newUserList(StringUtil.join(",", newUserList))
+                .totalUserList(StringUtil.join(",", totalUserList))
+                .build();
+    }
+
+    private Integer getUserCount(LocalDateTime beginTime, LocalDateTime endTime) {
+        Map map = new HashMap();
+        map.put("begin", beginTime);
+        map.put("end", endTime);
+        return userMapper.countByMap(map);
     }
 }
